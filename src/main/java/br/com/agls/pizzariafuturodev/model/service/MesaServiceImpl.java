@@ -7,16 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MesaServiceImpl implements MesaService {
 
+    /*
+    Injeção do MesaRepository utilizando o @autowired, isso substitui o new.
+     */
     @Autowired
     private MesaRepository mesaRepository;
 
     @Override
     public Mesa salvar(Mesa mesa) {
-        Mesa mesaSalvar = this.mesaRepository.save(mesa);
+        Mesa mesaSalvar = this.mesaRepository.save(mesa);// Momento que chama a camada de repository
         return mesaSalvar;
     }
 
@@ -27,13 +31,18 @@ public class MesaServiceImpl implements MesaService {
 
     @Override
     public Mesa buscar(Long id) {
+        Optional<Mesa> mesa = this.mesaRepository.findById(id);// Momento que chama a camada de repository
+
+        if(mesa.isPresent()) {
+            return mesa.get();
+        }
         return null;
     }
 
     @Override
     public List<Mesa> listar() {
-        return null;
-    }
+        return this.mesaRepository.findAll();
+    }// Momento que chama a camada de repository
 
     @Override
     public void excluir(Long id) {
