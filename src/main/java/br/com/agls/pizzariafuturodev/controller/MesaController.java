@@ -24,6 +24,11 @@ public class MesaController {
                 .body(this.mesaService.salvar(mesa));
     }
 
+    @PutMapping
+    public ResponseEntity<Mesa> atualizar(@RequestBody Mesa mesa) {
+        return ResponseEntity.ok(this.mesaService.atualizar(mesa));
+    }
+
     @GetMapping
     public ResponseEntity<List<Mesa>> listar() {
 //        return ResponseEntity
@@ -44,6 +49,6 @@ public class MesaController {
 
     @GetMapping("/ativas")
     public ResponseEntity<List<Mesa>> listarAtivas() {
-        return null;
+        return ResponseEntity.ok(this.mesaService.listarAtivas());
     }
 }
