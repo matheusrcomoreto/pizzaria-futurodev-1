@@ -82,6 +82,7 @@ public class MesaServiceImpl implements MesaService {
 
     @Override
     public void excluir(Long id) {
-
+        //delete from mesa where id = :id;
+        this.mesaRepository.deleteById(id);
     }
 }

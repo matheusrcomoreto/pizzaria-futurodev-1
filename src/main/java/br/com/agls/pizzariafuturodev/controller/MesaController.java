@@ -51,4 +51,10 @@ public class MesaController {
     public ResponseEntity<List<Mesa>> listarAtivas() {
         return ResponseEntity.ok(this.mesaService.listarAtivas());
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> excluir(@PathVariable Long id) {
+        this.mesaService.excluir(id);
+        return ResponseEntity.ok("Excluído com sucesso!");
+    }
 }
