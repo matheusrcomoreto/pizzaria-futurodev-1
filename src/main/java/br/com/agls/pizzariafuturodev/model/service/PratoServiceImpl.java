@@ -6,7 +6,9 @@ import br.com.agls.pizzariafuturodev.model.service.interfaces.PratoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PratoServiceImpl implements PratoService {
@@ -26,7 +28,20 @@ public class PratoServiceImpl implements PratoService {
 
     @Override
     public Prato buscar(Long id) {
-        return null;
+        Optional<Prato> pratoPesquisado = this.pratoRepository.findById(id);
+
+        if (pratoPesquisado.isEmpty()) {
+            throw new EntityNotFoundException("Não foi possível encontrar um prato com o id " + id);
+        }
+
+        return pratoPesquisado.get();
+    }
+
+    @Override
+    public Prato buscarPorNome(String nome) {
+        return this.pratoRepository.findByNome(nome).orElseThrow(() -> {
+            throw new EntityNotFoundException("Não foi possível encontrar um prato com o nome: " + nome);
+        });
     }
 
     @Override
@@ -36,6 +51,6 @@ public class PratoServiceImpl implements PratoService {
 
     @Override
     public void deletar(Long id) {
-
+        this.pratoRepository.deleteById(id);
     }
 }
