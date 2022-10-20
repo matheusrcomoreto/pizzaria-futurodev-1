@@ -1,4 +1,4 @@
-package br.com.agls.pizzariafuturodev.controller;
+package br.com.agls.pizzariafuturodev.api.controller;
 
 import br.com.agls.pizzariafuturodev.model.entity.Categoria;
 import br.com.agls.pizzariafuturodev.model.service.interfaces.CategoriaService;
