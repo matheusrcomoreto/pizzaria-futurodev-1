@@ -21,6 +21,7 @@ public class CategoriaServiceImpl implements CategoriaService {
 
     @Override
     public Categoria salvar(Categoria categoria) {
+
         String nome = categoria.getNome().toLowerCase();
         validarNome(nome);
         categoria.setNome(nome);
@@ -32,7 +33,6 @@ public class CategoriaServiceImpl implements CategoriaService {
         Categoria categoriaPesquisada = buscar(categoria.getId());
 
         if(Objects.nonNull(categoria)) {// Objects.nonNull(categoria) é a mesma coisa de categoriaPesquisada != null
-            categoria.setNome(categoria.getNome().toLowerCase());
             BeanUtils.copyProperties(categoria, categoriaPesquisada, "id");
             validarNome(categoriaPesquisada.getNome().toLowerCase());
             this.categoriaRepository.save(categoriaPesquisada);
@@ -57,12 +57,23 @@ public class CategoriaServiceImpl implements CategoriaService {
     }
 
     @Override
+    public Categoria buscarPorNome(String nome) {
+        Optional<Categoria> categoriaPesquisada = this.categoriaRepository.findByNome(nome);
+
+        if(categoriaPesquisada.isEmpty()) {
+            throw new EntityNotFoundException("Não foi possível encontrar uma categoria com o nome: " + nome);
+        }
+
+        return categoriaPesquisada.get();
+    }
+
+    @Override
     public List<Categoria> listar() {
         return this.categoriaRepository.findAll();
     }
 
     @Override
     public void deletar(Long id) {
-
+        this.categoriaRepository.deleteById(id);
     }
 }
