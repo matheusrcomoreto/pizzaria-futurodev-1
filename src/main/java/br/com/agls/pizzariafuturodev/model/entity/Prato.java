@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -27,4 +28,7 @@ public class Prato {
     @ManyToOne
     private Categoria categoria;
     // alter table add constraint forenig_key categoria references categoria(id);
+
+    @ManyToMany(mappedBy = "pedidoPrato")
+    private List<Pedido> pedido;
 }
