@@ -1,5 +1,6 @@
 package br.com.agls.pizzariafuturodev.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,8 @@ public class Pedido {
 
     private Boolean isPago;
 
+
+    @JsonManagedReference
     @ManyToMany
     @JoinTable(
             name = "pedido_prato",
