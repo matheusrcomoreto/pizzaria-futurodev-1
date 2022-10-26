@@ -1,6 +1,7 @@
 package br.com.agls.pizzariafuturodev.api.dto.request;
 
 import br.com.agls.pizzariafuturodev.model.entity.Cartao;
+import br.com.agls.pizzariafuturodev.model.entity.Usuario;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,5 +25,8 @@ public class CartaoRequestDto {
 
     @PositiveOrZero
     private Double limite;
+
+    @NotNull
+    private Usuario usuario;
 
 }

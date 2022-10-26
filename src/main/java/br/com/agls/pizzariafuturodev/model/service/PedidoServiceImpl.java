@@ -1,11 +1,13 @@
 package br.com.agls.pizzariafuturodev.model.service;
 
-import br.com.agls.pizzariafuturodev.model.entity.Mesa;
-import br.com.agls.pizzariafuturodev.model.entity.Pedido;
-import br.com.agls.pizzariafuturodev.model.entity.Prato;
+import br.com.agls.pizzariafuturodev.model.entity.*;
+import br.com.agls.pizzariafuturodev.model.exception.FalhaNoPagamentoException;
+import br.com.agls.pizzariafuturodev.model.exception.SaldoInsuficienteException;
 import br.com.agls.pizzariafuturodev.model.repository.PedidoRepository;
+import br.com.agls.pizzariafuturodev.model.service.interfaces.CartaoService;
 import br.com.agls.pizzariafuturodev.model.service.interfaces.MesaService;
 import br.com.agls.pizzariafuturodev.model.service.interfaces.PedidoService;
+import br.com.agls.pizzariafuturodev.model.service.interfaces.UsuarioService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,8 +24,16 @@ public class PedidoServiceImpl implements PedidoService {
     @Autowired
     private MesaService mesaService;
 
+    @Autowired
+    private CartaoService cartaoService;
+
+    @Autowired
+    private UsuarioService usuarioService;
+
     @Override
     public Pedido salvar(Pedido pedido) {
+        Usuario usuarioPesquisado = this.usuarioService.buscar(pedido.getUsuario().getId());
+        pedido.setUsuario(usuarioPesquisado);
 
         Pedido pedidoSalvo = this.pedidoRepository.save(pedido);
 
@@ -73,7 +83,7 @@ public class PedidoServiceImpl implements PedidoService {
         pedidoPesquisado.setValorTotal(valorConta);
 
         //TODO Implementar pagamento.
-        pedidoPesquisado.setIsPago(true);
+        fazerPagamento(pedidoPesquisado);
 
         try {
             pedidoFechado = this.pedidoRepository.save(pedidoPesquisado);
@@ -83,6 +93,24 @@ public class PedidoServiceImpl implements PedidoService {
 
         atualizarMesa(pedidoPesquisado.getMesa());
         return pedidoFechado;
+    }
+
+    private void fazerPagamento(Pedido pedido) {
+        Double valorConta = pedido.getValorTotal();
+        Cartao cartaoSelecionado = this.cartaoService.buscar(pedido.getUsuario().getCartoes().get(1).getId());
+
+        if(cartaoSelecionado.getSaldo() >= valorConta) {
+            try {
+                cartaoSelecionado.setLimiteUtilizado(cartaoSelecionado.getLimiteUtilizado() + valorConta);
+                cartaoSelecionado.setSaldo(cartaoSelecionado.getLimite() - cartaoSelecionado.getLimiteUtilizado());
+                this.cartaoService.atualizar(cartaoSelecionado);
+                pedido.setIsPago(true);
+            } catch (Exception e) {
+                throw new FalhaNoPagamentoException();
+            }
+        } else {
+            throw new SaldoInsuficienteException();
+        }
     }
 
     private Double calcularValorConta(List<Prato> pratosPedidos) {

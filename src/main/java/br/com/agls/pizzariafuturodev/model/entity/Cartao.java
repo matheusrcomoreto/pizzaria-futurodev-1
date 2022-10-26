@@ -1,12 +1,12 @@
 package br.com.agls.pizzariafuturodev.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
@@ -23,7 +23,6 @@ public class Cartao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //@Max(16)
     //@Column(length = 16)
     @Size(max = 16)
     private String numero;
@@ -34,7 +33,17 @@ public class Cartao {
     @PositiveOrZero
     private Double limite;
 
-    private Double limiteUtilizado;
+    private Double limiteUtilizado = 0.0;
 
-    private Double saldo;
+    private Double saldo = 0.0;
+
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
+
+    /*
+        alter table cartao add constranit forenig key(fk_usuario_cartao)
+        column usuario_id references usuario(id);
+     */
 }

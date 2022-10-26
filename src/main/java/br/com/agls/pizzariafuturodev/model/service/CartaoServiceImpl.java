@@ -6,6 +6,7 @@ import br.com.agls.pizzariafuturodev.model.service.interfaces.CartaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -26,7 +27,9 @@ public class CartaoServiceImpl implements CartaoService {
 
     @Override
     public Cartao buscar(Long id) {
-        return null;
+        return this.cartaoRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException("Não foi possível encontrar um cartão com o id " + id);
+        });
     }
 
     @Override

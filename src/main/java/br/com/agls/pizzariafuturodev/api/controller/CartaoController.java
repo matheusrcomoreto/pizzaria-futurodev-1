@@ -36,6 +36,7 @@ public class CartaoController {
         cartao.setNumero(cartaoRequestDto.getNumero());
         cartao.setValidade(cartaoRequestDto.getValidade());
         cartao.setLimite(cartaoRequestDto.getLimite());
+        cartao.setUsuario((cartaoRequestDto.getUsuario()));
 
         return cartao;
     }

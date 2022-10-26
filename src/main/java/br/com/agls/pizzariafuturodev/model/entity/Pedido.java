@@ -26,6 +26,8 @@ public class Pedido {
 
     private Boolean isPago;
 
+    @ManyToOne
+    private Usuario usuario;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonManagedReference
