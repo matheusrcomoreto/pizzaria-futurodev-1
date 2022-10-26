@@ -1,12 +1,10 @@
 package br.com.agls.pizzariafuturodev.api.dto.request;
 
-import br.com.agls.pizzariafuturodev.model.entity.Cartao;
-import br.com.agls.pizzariafuturodev.model.entity.Usuario;
+import br.com.agls.pizzariafuturodev.model.entity.TipoCartao;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
@@ -21,12 +19,12 @@ public class CartaoRequestDto {
     private String numero;
 
     @NotNull
+    private TipoCartao tipoCartao;
+
+    @NotNull
     private LocalDate validade;
 
     @PositiveOrZero
     private Double limite;
-
-    @NotNull
-    private Usuario usuario;
 
 }
