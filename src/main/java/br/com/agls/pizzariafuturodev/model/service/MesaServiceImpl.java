@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -42,12 +43,9 @@ public class MesaServiceImpl implements MesaService {
 
     @Override
     public Mesa buscar(Long id) {
-        Optional<Mesa> mesa = this.mesaRepository.findById(id);// Momento que chama a camada de repository
-
-        if(mesa.isPresent()) {
-            return mesa.get();
-        }
-        return null;
+        return this.mesaRepository.findById(id).orElseThrow(() -> {
+            throw new EntityNotFoundException("Não foi possível encontrar uma mesa com id " + id);
+        });
     }
 
     @Override
@@ -82,6 +80,7 @@ public class MesaServiceImpl implements MesaService {
 
     @Override
     public void excluir(Long id) {
+        this.buscar(id);
         //delete from mesa where id = :id;
         this.mesaRepository.deleteById(id);
     }
