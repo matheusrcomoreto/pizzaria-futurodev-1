@@ -7,8 +7,7 @@ import br.com.agls.pizzariafuturodev.model.repository.PedidoRepository;
 import br.com.agls.pizzariafuturodev.model.service.interfaces.CartaoService;
 import br.com.agls.pizzariafuturodev.model.service.interfaces.MesaService;
 import br.com.agls.pizzariafuturodev.model.service.interfaces.PedidoService;
-import br.com.agls.pizzariafuturodev.model.service.interfaces.UsuarioService;
-import org.springframework.beans.BeanUtils;
+import br.com.agls.pizzariafuturodev.model.service.interfaces.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,12 +27,12 @@ public class PedidoServiceImpl implements PedidoService {
     private CartaoService cartaoService;
 
     @Autowired
-    private UsuarioService usuarioService;
+    private ClienteService clienteService;
 
     @Override
     public Pedido salvar(Pedido pedido) {
-        Usuario usuarioPesquisado = this.usuarioService.buscar(pedido.getUsuario().getId());
-        pedido.setUsuario(usuarioPesquisado);
+        Cliente clientePesquisado = this.clienteService.buscar(pedido.getCliente().getId());
+        pedido.setCliente(clientePesquisado);
 
         Pedido pedidoSalvo = this.pedidoRepository.save(pedido);
 
@@ -97,7 +96,7 @@ public class PedidoServiceImpl implements PedidoService {
 
     private void fazerPagamento(Pedido pedido) {
         Double valorConta = pedido.getValorTotal();
-        Cartao cartaoSelecionado = this.cartaoService.buscar(pedido.getUsuario().getCartoes().get(1).getId());
+        Cartao cartaoSelecionado = this.cartaoService.buscar(pedido.getCliente().getCartoes().get(1).getId());
 
         if(cartaoSelecionado.getSaldo() >= valorConta) {
             try {

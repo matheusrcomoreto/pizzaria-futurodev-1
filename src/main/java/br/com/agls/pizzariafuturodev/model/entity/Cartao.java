@@ -27,6 +27,8 @@ public class Cartao {
     @Size(max = 16)
     private String numero;
 
+    private TipoCartao tipoCartao;
+
     @NotNull
     private LocalDate validade;
 
@@ -39,8 +41,8 @@ public class Cartao {
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
 
     /*
         alter table cartao add constranit forenig key(fk_usuario_cartao)
