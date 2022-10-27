@@ -75,14 +75,14 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
     @Override
-    public Pedido fecharConta(Long idPedido) {
+    public Pedido fecharConta(Long idPedido, String numeroCartao) {
         Pedido pedidoFechado = null;
         Pedido pedidoPesquisado = buscar(idPedido);
         Double valorConta = calcularValorConta(pedidoPesquisado.getPedidoPrato());
         pedidoPesquisado.setValorTotal(valorConta);
 
         //TODO Implementar pagamento.
-        fazerPagamento(pedidoPesquisado);
+        fazerPagamento(pedidoPesquisado, numeroCartao);
 
         try {
             pedidoFechado = this.pedidoRepository.save(pedidoPesquisado);
@@ -94,9 +94,12 @@ public class PedidoServiceImpl implements PedidoService {
         return pedidoFechado;
     }
 
-    private void fazerPagamento(Pedido pedido) {
+    private void fazerPagamento(Pedido pedido, String numeroCartao) {
         Double valorConta = pedido.getValorTotal();
-        Cartao cartaoSelecionado = this.cartaoService.buscar(pedido.getCliente().getCartoes().get(1).getId());
+        Cartao cartaoSelecionado = this.cartaoService.buscarPeloNumeroCartaoCliente(numeroCartao,pedido.getCliente().getId());
+
+        //TODO corrigir gambiarra
+        cartaoSelecionado.setSaldo(cartaoSelecionado.getLimite());
 
         if(cartaoSelecionado.getSaldo() >= valorConta) {
             try {

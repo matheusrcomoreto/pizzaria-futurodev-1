@@ -29,9 +29,9 @@ public class Pedido {
     @ManyToOne
     private Cliente cliente;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @JsonManagedReference
-    @ManyToMany
+//    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+//    @JsonManagedReference
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "pedido_prato",
             joinColumns = @JoinColumn(name = "pedido_id"),

@@ -41,4 +41,12 @@ public class CartaoServiceImpl implements CartaoService {
     public void deletar(Long id) {
 
     }
+
+    @Override
+    public Cartao buscarPeloNumeroCartaoCliente(String numero, Long idCliente) {
+        return this.cartaoRepository.findByNumeroAndClienteId(numero,idCliente).orElseThrow(() -> {
+            throw new EntityNotFoundException("Não foi possível encontrar um cartão de número "
+                    + numero + " vinculado do cliente " + idCliente);
+        });
+    }
 }
